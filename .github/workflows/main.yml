@@ -38,8 +38,6 @@ jobs:
 
       - name: Prettify code
         uses: creyD/prettier_action@v4.3
-        with:
-          prettier_options: --write **/*.{js,md}
 
       - name: Install Dependencies
         run: npm i
