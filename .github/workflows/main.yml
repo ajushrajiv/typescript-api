@@ -1,0 +1,27 @@
+name: aws-example-workflow
+
+on: workflow_dispatch
+
+jobs: 
+  copy:
+    runs-on: ubuntu-latest
+    steps: 
+    - name: checkout
+      uses: actions/checkout@v4
+  lint:
+    # lint (check for syntax)
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+    
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.0'
+    
+      - name: Install Dependencies
+        run: npm i
+    
+      - name: Run ESLint
+        run: npm run lint
