@@ -1,0 +1,177 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"TodoAttributes": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"task": {
+						"type": "string"
+					},
+					"completed": {
+						"type": "boolean"
+					},
+					"doBefore": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "string"
+							}
+						]
+					}
+				},
+				"required": [
+					"userId",
+					"task",
+					"doBefore"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TodoResponse": {
+				"type": "boolean"
+			},
+			"Error": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"stack": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RequestBody": {
+				"properties": {
+					"todoId": {
+						"type": "string"
+					},
+					"newTask": {
+						"type": "string"
+					},
+					"newCompleted": {
+						"type": "string"
+					},
+					"newDoBefore": {
+						"type": "string"
+					},
+					"newUserId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"newTask",
+					"newCompleted",
+					"newDoBefore",
+					"newUserId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "typescript-api",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/v1/todo/todos": {
+			"get": {
+				"operationId": "GetAllTodos",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/TodoAttributes"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Todo"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/v1/todo/addtodo": {
+			"post": {
+				"operationId": "AddTodo",
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/TodoResponse"
+										},
+										{
+											"$ref": "#/components/schemas/Error"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Todo"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RequestBody"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
