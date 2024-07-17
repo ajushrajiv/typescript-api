@@ -9,8 +9,8 @@ import {
   SuccessResponse,
   Tags,
   Query,
-  // Put,
-  // Delete
+  Put,
+  Delete
 } from '@tsoa/runtime';
 import { Request as ExpressRequest } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -57,68 +57,68 @@ class TodoController extends Controller {
     }
 
     const todo = await TodoModel.findOne({ where: { id: todoId } });
-    return todo;
+    return todo as TodoAttributes;
   }
 
-  // @Get('/byuserid')
-  // public async getTodosByUserId(@Query() userId: number) {
-  //   const todos = await TodoModel.findAll({ where: { userId } });
-  //   return todos;
-  // }
+  @Get('/byuserid')
+  public async getTodosByUserId(@Query() userId: number): Promise<TodoAttributes[]> {
+    const todos = await TodoModel.findAll({ where: { userId } });
+    return todos;
+  }
 
-  // @Put('/updatetodo')
-  // public async updateTodo(
-  //   @Request() req: ExpressRequest,
-  //   @Body() body: RequestBody,
-  // ) {
-  //   const { todoId, newTask, newDoBefore, newCompleted } = body;
+  @Put('/updatetodo')
+  public async updateTodo(
+    @Request() req: ExpressRequest,
+    @Body() body: RequestBody,
+  ):  Promise<TodoResponse | Error> {
+    const { todoId, newTask, newDoBefore, newCompleted } = body;
 
-  //   await TodoModel.update(
-  //     {
-  //       task: newTask,
-  //       completed: newCompleted === "true",
-  //       doBefore: new Date(newDoBefore),
-  //     },
-  //     { where: { id: todoId } },
-  //   );
+    await TodoModel.update(
+      {
+        task: newTask,
+        completed: newCompleted === "true",
+        doBefore: new Date(newDoBefore),
+      },
+      { where: { id: todoId } },
+    );
 
-  //   const todo = await TodoModel.findByPk(todoId);
-  //   return todo;
-  // }
+    await TodoModel.findByPk(todoId);
+    return true;
+  }
 
-  // @Put('/marktodo')
-  // public async markTodo(
-  //   @Request() req: ExpressRequest,
-  //   @Body() body: RequestBody,
-  // ) {
-  //   const { newCompleted, todoId } = body;
+  @Put('/marktodo')
+  public async markTodo(
+    @Request() req: ExpressRequest,
+    @Body() body: RequestBody,
+  ):  Promise<TodoResponse | Error> {
+    const { newCompleted, todoId } = body;
 
-  //   await TodoModel.update(
-  //     {
-  //       completed: newCompleted === "true"
-  //     },
-  //     { where: { id: todoId } },
-  //   );
+    await TodoModel.update(
+      {
+        completed: newCompleted === "true"
+      },
+      { where: { id: todoId } },
+    );
 
-  //   const updatedTodo = await TodoModel.findByPk(todoId);
-  //   return updatedTodo;
-  // } 
+    await TodoModel.findByPk(todoId);
+    return true;
+  } 
 
-  // @Delete('/deletetodo')
-  // public async deleteTodo(
-  //   @Request() req: ExpressRequest,
-  //   @Body() body: RequestBody,
-  //   ) {
-  //     const { todoId } = body;
+  @Delete('/deletetodo')
+  public async deleteTodo(
+    @Request() req: ExpressRequest,
+    @Body() body: RequestBody,
+    ):  Promise<TodoResponse | Error> {
+      const { todoId } = body;
   
-  //     const deleted = await TodoModel.destroy({ where: { id: todoId } });
-  //     if (deleted) {
-  //       return { deletedTodos: todoId };
-  //     } else {
-  //       this.setStatus(StatusCodes.NOT_FOUND);
-  //       return "Todo not found";
-  //     }
-  //   }
+      const deleted = await TodoModel.destroy({ where: { id: todoId } });
+      if (deleted) {
+        return true;
+      } else {
+        this.setStatus(StatusCodes.NOT_FOUND);
+        return false;
+      }
+    }
 }
 
 export default TodoController;
